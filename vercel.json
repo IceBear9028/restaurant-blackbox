@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/storage",
-      "schedule": "0 18 * * *" // 매일 한국시간 기준 새벽 3시(UTC + 9) 기준으로 실행
+      "schedule": "0 18 * * *"
     }
   ]
 }
