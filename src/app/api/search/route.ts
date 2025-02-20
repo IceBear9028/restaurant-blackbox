@@ -1,6 +1,7 @@
 import { Redis } from '@upstash/redis';
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
+import { SALES_PENALTY_KEY } from '@/app/constant/redisKey';
 
 interface ResponseType {
   result: SalesPenaltyItem[];
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
     const searchText = nextUrl.searchParams.get('search_text');
 
     if (searchText) {
-      const allSalesPenaltyData: SalesPenaltyItem[] = await redis.lrange('I0481', 0, -1);
+      const allSalesPenaltyData: SalesPenaltyItem[] = await redis.lrange(SALES_PENALTY_KEY, 0, -1);
       const filterData = allSalesPenaltyData.filter((item) => item.PRCSCITYPOINT_BSSHNM.includes(searchText));
       return NextResponse.json<ResponseType>({ result: filterData }, { status: 200 });
     }
