@@ -25,16 +25,16 @@ export async function GET() {
       `${process.env['OPENAPI_SALES_PENALTY_URL']}/api/${process.env['OPENAPI_SALES_PENALTY_TOKEN']}/I0481/json/${startIdx}/${endIdx}`;
     const pilotData: PostResponse = await fetch(openApiUrl(1, 1), { method: 'GET' }).then((res) => res.json());
     const redisDataCount = await redis.llen('I0481');
-    const totalCount = Number(pilotData.I0481.total_count);
+    const openApiCount = Number(pilotData.I0481.total_count);
     const updatedApiResult: SalesPenaltyItem[] = [];
 
     // 1. 새로 가져온 Open API 가 업데이트 되지 않았다면
-    if (totalCount === redisDataCount) {
+    if (openApiCount === redisDataCount) {
       return NextResponse.json({ updateDate: 'none' }, { status: 200 });
     }
 
     // 2. 새로 Open API 에 값이 업데이트 되었으면
-    for (let i = 0; i < Math.ceil(redisDataCount / 500); i++) {
+    for (let i = 0; i < Math.ceil(openApiCount / 500); i++) {
       const startIdx = i * 500 + 1;
       const endIdx = i * 500 + 500;
       const data: PostResponse = await fetch(openApiUrl(startIdx, endIdx), { method: 'GET' }).then((res) => res.json());
@@ -42,9 +42,20 @@ export async function GET() {
     }
 
     // 2-1. 업데이트 된 값을 Redis 에 업로드
-    await redis.set('I0481', updatedApiResult);
-    return NextResponse.json({ updateDate: new Date().toISOString() }, { status: 200 });
+    if (updatedApiResult.length > 0) {
+      await redis.del('I0481');
+      await redis.rpush('I0481', ...updatedApiResult.map((item) => JSON.stringify(item)));
+    }
+    return NextResponse.json(
+      {
+        updateDate: new Date().toISOString(),
+        downloadData: updatedApiResult,
+        totalCount: openApiCount,
+        redisDataCount,
+      },
+      { status: 200 },
+    );
   } catch (err) {
-    return NextResponse.json({ error: err }, { status: 500 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown error' }, { status: 500 });
   }
 }
