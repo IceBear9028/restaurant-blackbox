@@ -17,7 +17,7 @@ interface PostResponse {
   };
 }
 
-/** ### storage 스케줄링 업데이트
+/** ### scheduling 스케줄링 업데이트
  */
 export async function GET() {
   try {
