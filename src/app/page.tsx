@@ -2,6 +2,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import { Search } from '@/components/search';
 import { TestModal } from '@/components/modal/Modal';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   return (
@@ -10,6 +11,9 @@ export default function Home() {
         <Image className={styles.logo} src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
         <Search value={'안녕하세요'} />
         <TestModal />
+        <Button variant={'default'} size={'lg'}>
+          Button
+        </Button>
         <ol>
           <li>
             Get started by editing <code>src/app/page.tsx</code>.
