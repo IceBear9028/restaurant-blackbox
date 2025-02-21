@@ -1,16 +1,17 @@
-'use client';
-import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface SearchProps {
-  value: string;
+  value?: string;
 }
 
 export const Search = ({ value = '' }: SearchProps) => {
-  const [text, setText] = useState<string>(value);
   return (
-    <div>
-      <input type="text" placeholder="Search..." onChange={(e) => setText(e.target.value)} value={text} />
-      <button></button>
-    </div>
+    <form action="/search" method="GET" className="flex w-full max-w-sm items-center space-x-2">
+      <Input type="text" name="search_text" placeholder="Search..." defaultValue={value} />
+      <Button type="submit" size="lg">
+        검색
+      </Button>
+    </form>
   );
 };
