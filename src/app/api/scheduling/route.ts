@@ -1,6 +1,6 @@
 import { Redis } from '@upstash/redis';
 import { NextResponse } from 'next/server';
-import { SALES_PENALTY_KEY } from '@/app/constant/redisKey';
+import { SALES_PENALTY_KEY } from '@/constant/redisKey';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,

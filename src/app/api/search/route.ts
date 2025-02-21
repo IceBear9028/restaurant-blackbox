@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis';
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import { SALES_PENALTY_KEY } from '@/app/constant/redisKey';
+import { SALES_PENALTY_KEY } from '@/constant/redisKey';
 
 interface ResponseType {
   result: SalesPenaltyItem[];
