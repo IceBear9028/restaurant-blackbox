@@ -28,9 +28,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const data = await fetchGetSearchResult(params.search_text);
   return (
-    <>
-      <Search value={params.search_text} />
-      <article>
+    <main>
+      <article className="w-[1000px] px-8 pt-12 pb-36">
+        <Search value={params.search_text} />
         {data && data.result.length > 0 ? (
           <section>
             {data.result.map((item) => (
@@ -59,6 +59,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <p>검색결과가 없습니다.</p>
         )}
       </article>
-    </>
+    </main>
   );
 }
