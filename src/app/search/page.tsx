@@ -36,10 +36,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               <SearchCard
                 key={`${item.LCNS_NO}`}
                 href={`/detail/${item.LCNS_NO}`}
-                storeTitle={item.PRCSCITYPOINT_BSSHNM}
+                storeTitle={item.BSSH_NM}
                 licenseId={item.LCNS_NO}
-                address={item.ADDR}
-                phone={item.TELNO}
+                address={item.LOCP_ADDR}
               />
             ))}
           </section>
