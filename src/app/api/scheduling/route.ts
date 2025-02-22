@@ -1,6 +1,7 @@
 import { Redis } from '@upstash/redis';
 import { NextResponse } from 'next/server';
-import { SALES_PENALTY_KEY } from '@/app/constant/redisKey';
+import { SALES_PENALTY_KEY } from '@/constant/redisKey';
+import { url } from '@/constant/url';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -22,9 +23,7 @@ interface PostResponse {
  */
 export async function GET() {
   try {
-    const openApiUrl = (startIdx: number, endIdx: number) =>
-      `${process.env.OPENAPI_SALES_PENALTY_URL}/api/${process.env.OPENAPI_SALES_PENALTY_TOKEN}/${SALES_PENALTY_KEY}/json/${startIdx}/${endIdx}`;
-    const pilotData: PostResponse = await fetch(openApiUrl(1, 1), { method: 'GET' }).then((res) => res.json());
+    const pilotData: PostResponse = await fetch(url.openApiUrl(1, 1), { method: 'GET' }).then((res) => res.json());
     const redisDataCount = await redis.llen(SALES_PENALTY_KEY);
     const openApiCount = Number(pilotData.I0481.total_count);
     const updatedApiResult: SalesPenaltyItem[] = [];
@@ -38,7 +37,7 @@ export async function GET() {
     for (let i = 0; i < Math.ceil(openApiCount / 500); i++) {
       const startIdx = i * 500 + 1;
       const endIdx = i * 500 + 500;
-      const data: PostResponse = await fetch(openApiUrl(startIdx, endIdx), { method: 'GET' }).then((res) => res.json());
+      const data: PostResponse = await fetch(url.openApiUrl(startIdx, endIdx), { method: 'GET' }).then((res) => res.json());
       updatedApiResult.push(...data.I0481.row);
     }
 
