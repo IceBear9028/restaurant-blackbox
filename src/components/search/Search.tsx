@@ -7,7 +7,7 @@ interface SearchProps {
 
 export const Search = ({ value = '' }: SearchProps) => {
   return (
-    <form action="/search" method="GET" className="flex w-full max-w-sm items-center space-x-2">
+    <form action="/search" method="GET" className="flex w-full items-center space-x-2">
       <Input type="text" name="search_text" placeholder="Search..." defaultValue={value} />
       <Button type="submit" size="lg">
         검색
