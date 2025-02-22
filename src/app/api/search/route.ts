@@ -1,16 +1,21 @@
-import { Redis } from '@upstash/redis';
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import { SALES_PENALTY_KEY } from '@/constant/redisKey';
+import { url } from '@/constant/url';
 
 export interface SearchResponse {
-  result: SalesPenaltyItem[];
+  result: SalesLicenseItem[];
 }
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+interface PostResponse {
+  I2500: {
+    total_count: string;
+    row: SalesLicenseItem[];
+    RESULT: {
+      MSG: string;
+      CODE: string; //'INFO-000';
+    };
+  };
+}
 
 /** ### route GET(req : queryParma)
  * - `URL` : https://${DOMAIN}/api/search?search_text={검색어}
@@ -22,9 +27,8 @@ export async function GET(req: NextRequest) {
     const searchText = nextUrl.searchParams.get('search_text');
 
     if (searchText) {
-      const allSalesPenaltyData: SalesPenaltyItem[] = await redis.lrange(SALES_PENALTY_KEY, 0, -1);
-      const filterData = allSalesPenaltyData.filter((item) => item.PRCSCITYPOINT_BSSHNM.includes(searchText));
-      return NextResponse.json<SearchResponse>({ result: filterData }, { status: 200 });
+      const data: PostResponse = await fetch(url.searchApiUrl(searchText, 1, 50)).then((res) => res.json());
+      return NextResponse.json<SearchResponse>({ result: data.I2500.row }, { status: 200 });
     }
     return NextResponse.json<SearchResponse>({ result: [] }, { status: 200 });
   } catch (err) {
