@@ -2,7 +2,7 @@ import { SearchResponse } from '@/app/api/search/route';
 import { url } from '@/constant/url';
 import { Search } from '@/components/search';
 
-export async function fetchGetSearchResult(searchText?: string) {
+async function fetchGetSearchResult(searchText?: string) {
   if (!searchText) {
     return;
   }
